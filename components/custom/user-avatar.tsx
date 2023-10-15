@@ -6,7 +6,7 @@ const UserAvatar = () => {
    const {user} = useUser();
 
   return (
-    <Avatar className='h-16 w-16 flex-shrink-0 '>
+    <Avatar className='h-16 w-16 '>
         <AvatarImage  src={user?.imageUrl} />
         <AvatarFallback>
             {user?.firstName?.charAt(0)}
