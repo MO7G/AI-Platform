@@ -5,58 +5,15 @@ import Image from "next/image";
 import { Montserrat } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { Code, ImageIcon, LayoutDashboard, MessageSquare, Music, Settings, VideoIcon } from "lucide-react";
-
+import { usePathname } from "next/navigation";
+import { sideBarRoutes } from "@/utilities/SideBarRoutes";
 const montserrat = Montserrat({ weight: "600", subsets: ["latin"] });
 
 
-// Let this for now but latter I will move it to another folder and maybe I will implement a 
-// dynamic navigation for different users like we can have an admin and a normal user as well 
-const routes = [
-    {
-        label: "Dashboard",
-        icon: LayoutDashboard,
-        href: "/dashboard",
-        color: "text-sky-500",
-    },
-    {
-        label: "Conversation",
-        icon: MessageSquare,
-        href: "/conversation",
-        color: "text-pink-700",
-    },
-    {
-        label: "Image Generation",
-        icon: ImageIcon,
-        href: "/Image",
-        color: "text-green-700",
-    },
-    {
-        label: "Video Generation",
-        icon: VideoIcon,
-        href: "/Music",
-        color: "text-orange-500",
-    },
-    {
-        label: "Music Generation",
-        icon: Music,
-        href: "/Music",
-        color: "text-emerald-500",
-    },
-    {
-        label: "Code Generation",
-        icon: Code,
-        href: "/Code",
-        color: "text-violet-500",
-    },
-    {
-        label: "Settings",
-        icon: Settings,
-        href: "/Settings",
-        color: "text-white-500",
-    },
-];
+
 
 const Sidebar = () => {
+    const pathname = usePathname();
     return (
         <div className="space-y-4 py-4 flex flex-col h-full bg-[#111827] text-white">
             <div className="px-3 py-2 flex-1">
@@ -70,11 +27,12 @@ const Sidebar = () => {
                 </Link>
 
                 <div className="space-y-1">
-                    {routes.map((route, index) => (
+                    {sideBarRoutes.map((route, index) => (
                         <Link
                             href={route.href}
-                            key={index}
-                            className="text-sm group flex p-3 w-full justify-start font-medium cursor-pointer hover:text-white hover:bg-white/10 rounded-lg transition"
+                            key={route.label}
+                            className={cn("text-sm group flex p-3 w-full justify-start font-medium cursor-pointer hover:text-white hover:bg-white/10 rounded-lg transition",
+                                pathname === route.href ? `text-white ${route.color}  bg-white/10` : "text-zinc-400")}
                         >
                             <div className="flex items-center flex-1">
                                 <route.icon className={cn("h-5 w-5 mr-3", route.color)} />
