@@ -2,7 +2,7 @@
 import axios from "axios"
 import * as z from "zod"
 import Heading from '@/components/custom/Heading'
-import { MessageSquare } from 'lucide-react'
+import { CodeIcon, MessageSquare } from 'lucide-react'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { formSchema } from "./constants"
@@ -18,12 +18,14 @@ import { cn } from "@/lib/utils"
 import UserAvatar from "@/components/custom/user-avatar"
 import BotAvatar from "@/components/custom/bot-avatar"
 import { useTheme } from "next-themes"
+import ReactMarkdown from 'react-markdown'
+import { DialogOverlayImplProps } from "@radix-ui/react-dialog"
 
 
-
-const Conversation = () => {
+const CodePage = () => {
     const [messages, setMessages] = useState<ChatCompletionMessageParam[]>([])
-    const {theme} = useTheme()
+    const { theme } = useTheme()
+  
     const router = useRouter();
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -42,12 +44,12 @@ const Conversation = () => {
             };
 
             const newMessages = [...messages, userMessage];
-            const response = await axios.post("/api/conversation", { messages: newMessages });
+            const response = await axios.post("/api/code ", { messages: newMessages });
             setMessages((current) => [...current, userMessage, response.data])
             form.reset();
         } catch (error: any) {
             // todo open pro model 
-            console.log("errro from the Conversation page ", error)
+            console.log("errro from the code page ", error)
         } finally {
             // it's recommended to refresh the routers for some reason 
             router.refresh();
@@ -57,10 +59,10 @@ const Conversation = () => {
     return (
         <div>
             <Heading
-                title="Conversation"
-                desc="Our most advanced Conversation model"
-                Icon={MessageSquare}
-                iconColor='text-pink-500'
+                title="Code Generation"
+                desc="Our most advanced Code model"
+                Icon={CodeIcon}
+                iconColor='text-violet-500'
                 bgColor='bg-violet-500/10'
             />
             <div className='px-4 lg:px-8'>
@@ -75,7 +77,7 @@ const Conversation = () => {
                                         <Input
                                             className="border-0 outline-none focus-visible:ring-0 focus-visible:ring-transparent"
                                             disabled={isLoading}
-                                            placeholder="Ask Mo7aMind"
+                                            placeholder="Ask Mo7aMin to craft your coding abilities"
                                             {...field}
                                         />
                                     </FormControl>
@@ -97,20 +99,33 @@ const Conversation = () => {
                     )}
                     {messages.length === 0 && !isLoading && (
                         <div>
-                            <Empty image="robot2" label="No Converstaion Yet" />
+                            <Empty label="I Can solve your problems!!" image="code" />
                         </div>
                     )}
 
                     <div className="flex flex-col-reverse gap-y-4">
                         {messages.map((message, index) => (
                             <div key={index}
-                                className={cn("p-8 w-full resize-none flex  items-start gap-x-8 rounded-lg", message.role === "user" ? theme === "dark" ? "bg-slate-900" :  "bg-white border border-black/10 " : "bg-muted"
+                                className={cn("p-8 w-full resize-none flex  items-start gap-x-8 rounded-lg", message.role === "user" ? theme === "dark" ? "bg-slate-900" : "bg-white border border-black/10 " : "bg-muted"
                                 )}
                             >
-                                    {message.role === "user" ? <UserAvatar /> : <BotAvatar />}
-                                <p className="text-md">
-                                    {message.content}
-                                </p>
+                                {message.role === "user" ? <UserAvatar /> : <BotAvatar />}
+                                <ReactMarkdown 
+                                components={{
+                                    pre:({node,...props})=>(
+                                        <div className="overflow-auto w-full my-2 bg-black/10 p-2 rounded-lg">
+                                            <pre {...props}/>
+                                        </div>
+                                    ),  
+                                    code:({node,...props})=>(
+                                        <code className="bg-black/10 rounded-lg p-1" {...props} />
+                                            
+                                    )
+                                }}
+                                className="text-sm overflow-hidden leading-7"
+                                >
+                                    {message.content || ""}
+                                </ReactMarkdown>
                             </div>
                         ))}
                     </div>
@@ -120,4 +135,4 @@ const Conversation = () => {
     )
 }
 
-export default Conversation
+export default CodePage

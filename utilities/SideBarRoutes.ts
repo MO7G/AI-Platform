@@ -33,14 +33,14 @@ export const sideBarRoutes = [
     {
         label: "Music Generation",
         icon: Music,
-        href: "/Music",
+        href: "/musicGeneration",
         color: "text-emerald-700",
         bgColor: "",
     },
     {
         label: "Code Generation",
         icon: Code,
-        href: "/Code",
+        href: "/codeGeneration",
         color: "text-violet-500",
         bgColor: "",
     },

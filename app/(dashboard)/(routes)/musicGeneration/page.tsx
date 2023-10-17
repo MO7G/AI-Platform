@@ -97,7 +97,7 @@ const Conversation = () => {
                     )}
                     {messages.length === 0 && !isLoading && (
                         <div>
-                            <Empty image="robot2" label="No Converstaion Yet" />
+                            <Empty label="No Converstaion Yet" />
                         </div>
                     )}
 
